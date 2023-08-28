@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SymRecipe - Recettes{% endblock %}
+
+{% block body %}
+    <h1 class="text-center my-2 fw-bold">Liste des Recettes</h1>
+    <div class="container-fluid mt-3">
+
+    {% if paginations|length > 0 %}
+        <a href="{{path('app_add')}}" type="button" class="btn btn-success mb-2">Ajouter</a>
+    {% endif %}
+
+    {% if paginations|length == 0 %}
+        il y'a pas de recette
+    {% else %}
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            <table class="table table-hover">
+                <thead class="table table-danger text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prix</th>
+                        <th>Date de création</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                    {% for pagination in paginations %}
+                        <tbody class="text-center">
+                                <td>#{{pagination.id}}</td>
+                                <td>
+                                    <a href="{{path('app_show_recettes', {id:pagination.id})}}">
+                                        {{pagination.nom}}
+                                    </a>
+                                </td>
+                                <td>{{pagination.prix}}€</td>
+                                <td>{{pagination.createdat|date("m/d/Y")}}</td>
+                                <td>{{
+                                    pagination.notesMoyennes > 0 ? 
+                                    pagination.notesMoyennes|number_format(1, '.') 
+                                    : 0
+                                    }}/{{pagination.noteSur}}
+                                </td>
+                                <td>
+                                    <a href="{{path('modify_recipe', {'id':pagination.id})}}" class="btn btn-warning">Modifier</a>
+                                    <a href="{{path('delete_app', {'id':pagination.id})}}" class="btn btn-danger">Supprimer</a>
+                                </td>
+                        </tbody>
+                    {% endfor %}
+            </table>
+        </div>
+
+        <div class="mt-5 navigation d-flex justify-content-center">
+            {{ knp_pagination_render(paginations) }}
+        </div>
+    {% endif %}
+
+{% endblock %}

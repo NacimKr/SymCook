@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SymRecipe - Connexion{% endblock %}
+
+{% block body %}
+    <div class="container w-25 mt-5 p-4 bg-light rounded">
+    {# {{dump(error)}} #}
+    {% if error %}
+        <div class="text-danger text-center mb-3">{{ error.message|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <h1 class="text-center">Connexion</h1>
+        <form action="{{path('security_login')}}" method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label mt-4">Adresse Email</label>
+                <input type="email" class="form-control" id="username" name="_username" placeholder="Enter email">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label mt-4">Mot de Passe</label>
+                <input type="password" class="form-control" id="password" name="_password" placeholder="Password">
+            </div>
+            
+            <button type="submit" class="btn btn-primary mt-5">Se connecter</button>
+        </form>
+    </div>
+{% endblock %}

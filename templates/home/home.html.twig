@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+
+{% block title %}SymRecipe - Home{% endblock %}
+
+{% block body %}
+      <div class="container mt-5">
+
+        {% for message in app.flashes('notice') %}
+            <div class="alert alert-dismissible alert-success w-50">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                <strong>{{ message }}<strong>
+            </div>
+        {% endfor %}
+
+        <div class="p-5 bg-light border rounded-3">
+          <h2 class="fw-bold">Bienvenue sur SymRecipe</h2>
+          <p>Or, keep it light and add a border for some added definition to the boundaries of your content.<br/>
+          Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
+          <a href="{{path('security_inscription')}}" class="btn btn-primary" type="button">Inscription</a>
+        </div>
+          <h3 class="my-4 fw-bold">Recettes de la communauté</h3>
+      </div>
+
+          {% if recettes|length == 0 %}
+        il y'a pas de recette
+    {% else %}
+    <div class="container">
+                <div class="d-flex flex-wrap gap-3 justify-content-between mt-3">
+                    {% for recette in recettes %}
+                        <div class="card border-primary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">{{recette.nom}}</div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">{{recette.createdat|date('d/m/Y')}}</h6>
+                                <h4 class="card-title">{{recette.description}}</h4>
+                                <p class="card-text">{{recette.prix}}€</p>
+                                {# <p class="card-text">{{recette.createdat|date("m/d/Y")}}</p> #}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+    </div>
+        </div>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SymRecipe - Recettes{% endblock %}
+
+{% block body %}
+    <h1 class="text-center my-2 fw-bold">Liste des Recettes de la communauté</h1>
+    <div class="container-fluid mt-3">
+
+
+
+    {% for message in app.flashes('notice') %}
+        <div class="alert alert-dismissible alert-success w-50">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>{{ message }}<strong>
+        </div>
+    {% endfor %}
+
+    
+    {% if recettes|length == 0 %}
+        il y'a pas de recette
+    {% else %}
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
+                    {% for recette in recettes %}
+                        <div class="card border-primary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">{{recette.nom}}</div>
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">{{recette.createdat|date('d/m/Y')}}</h6>
+                                <h4 class="card-title">{{recette.description}}</h4>
+                                <p class="card-text">{{recette.prix}}€</p>
+                                {# <p class="card-text">{{recette.createdat|date("m/d/Y")}}</p> #}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+        </div>
+
+        {# <div class="mt-5 navigation d-flex justify-content-center">
+            {{ knp_pagination_render(recettes) }}
+        </div> #}
+    {% endif %}
+
+{% endblock %}

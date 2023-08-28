@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+
+{% block title %} 
+    SymRecipe - Ingrédients
+{% endblock %}
+
+{% block body %}
+    <h1 class="text-center my-2 fw-bold">Liste des ingrédients</h1>
+    
+    <div class="container-fluid mt-3">
+    <a href="{{path('add_recipe')}}" type="button" class="btn btn-success mb-2">Ajouter</a>
+        <table class="table table-hover">
+            <thead class="table table-danger text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Date de création</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+                {% for ingredient in ingredients %}
+                    <tbody class="text-center">
+                            <td>#{{ingredient.id}}</td>
+                            <td>
+                                <a href="{{path('modify_ingredients', {id:ingredient.id})}}">
+                                    {{ingredient.nom}}
+                                </a>
+                            </td>
+                            <td>{{ingredient.prix}}€</td>
+                            <td>{{ingredient.createdat|date("m/d/Y")}}</td>
+                            <td>
+                                <a href="{{path('modify_ingredients', {'id':ingredient.id})}}" class="btn btn-warning">Modifier</a>
+                                <a href="{{path('delete_app', {'id':ingredient.id})}}" class="btn btn-danger">Supprimer</a>
+                            </td>
+                    </tbody>
+                {% endfor %}
+        </table>
+    </div>
+    
+    <div class="mt-5 navigation d-flex justify-content-center">
+        {{ knp_pagination_render(ingredients) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{path("app_home")}}">SymRecipe</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav me-auto">
+    {% if app.user %}
+    {# {{dump(app.user)}} #}
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('app_list')}}">Liste des ingrédients</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('app_recettes')}}">Liste des recettes</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ app.user.fullName }}</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{path('app_user_edit', {id : app.user.id})}}">Modifier mes informations</a>
+            <a class="dropdown-item" href="{{path('app_edit_password', {id : app.user.id})}}">Modifier mon mot de passe</a>
+          </div>
+        </li>
+    </ul>
+    </div> 
+      <div class="float-end">
+        <a href="{{path('security_logout')}}" class="btn btn-dark">Se déconnecter</a>
+      </div>
+    {% else %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('app_recette_public')}}">Recettes de la communauté</a>
+        </li>
+
+        <div class="float-end">
+          <a href="{{path('security_login')}}" class="btn btn-success">Se connecter</a>
+          <a href="{{path('security_inscription')}}" class="ms-4 btn btn-warning">Inscription</a>
+        </div>
+    {% endif %}
+  </div>
+</nav>
