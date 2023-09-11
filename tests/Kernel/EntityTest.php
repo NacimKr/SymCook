@@ -4,17 +4,22 @@ namespace App\Tests\Kernel;
 
 use App\Entity\Notes;
 use App\Entity\Recettes;
+use App\Entity\User;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class EntityTest extends KernelTestCase
 {
     private $container;
+    private \Doctrine\ORM\EntityManager $entityManager;
 
     public function setUp():void
     {
-        self::bootKernel();
+        $kernel = self::bootKernel();
         $this->container = static::getContainer();
+        $this->entityManager = $kernel->getContainer()
+        ->get('doctrine')
+        ->getManager();
     }
 
     public function getEntityRecettes():Recettes
@@ -51,13 +56,14 @@ class EntityTest extends KernelTestCase
     {
         $recipes = $this->getEntityRecettes();
 
-        $user = $this->container->get(User::class)->findAll();
-        print_r($user);
+        $user = $this->entityManager
+        ->getRepository(User::class)
+        ->findOneBy(['id' => 1]);
 
         $notes = new Notes();
         $notes->setNote(5)
               ->setRecette($recipes)
-              ->setUser($$user)
+              ->setUser($user)
         ;
         $averageRecipes = $recipes->getNotesMoyennes();
 
