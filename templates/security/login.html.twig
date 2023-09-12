@@ -6,11 +6,11 @@
     <div class="container w-25 mt-5 p-4 bg-light rounded">
     {# {{dump(error)}} #}
     {% if error %}
-        <div class="text-danger text-center mb-3">{{ error.message|trans(error.messageData, 'security') }}</div>
+        <div class="text-danger text-center mb-3" name="error">{{ error.message|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     <h1 class="text-center">Connexion</h1>
-        <form action="{{path('security_login')}}" method="POST">
+        <form action="{{path('security_login')}}" method="POST" name="formLogin">
             <div class="form-group">
                 <label for="username" class="form-label mt-4">Adresse Email</label>
                 <input type="email" class="form-control" id="username" name="_username" placeholder="Enter email">
