@@ -36,7 +36,7 @@ class ContactController extends AbstractController
                 $contact->getDescription(),
             );
 
-            return $this->redirectToRoute('app_contact');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('contact/index.html.twig', [

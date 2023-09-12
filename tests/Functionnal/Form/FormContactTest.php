@@ -17,11 +17,11 @@ class FormContactTest extends WebTestCase
 
         //On recupere le formulaire
         $form = $crawler->selectButton("Soumettre")->form();
-        //$this->assertEquals(1, count($form));
+        // $this->assertCount(1, count($form));
 
         //On rempli le formulaire
         $form['contact[fullName]'] = 'symfonyfan';
-        $form['contact[email]'] = 'anypass';
+        $form['contact[email]'] = 'anypass@gmail.com';
         $form['contact[sujet]'] = 'anypass';
         $form['contact[description]'] = 'anypass';
 
@@ -29,12 +29,12 @@ class FormContactTest extends WebTestCase
         $crawler = $client->submit($form);
 
         //Vérrifier le status code HTTP
-        // $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
         //Vérfier l'envoi du mail
-        // $this->assertEmailCount(1);
+        $this->assertEmailCount(1);
 
         //Vérfiier le message de succées
-        // $email = $this->getMailerMessage();
+        $this->assertSelectorTextContains();
     }
 }
