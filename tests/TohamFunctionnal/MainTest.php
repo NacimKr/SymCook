@@ -42,19 +42,30 @@ class MainTest extends WebTestCase
 
         //Redirect to home with session
         $this->assertRouteSame('app_home');
-    }
-
-    public function testreadRecipes():void
-    {
-        $client = static::createClient();
 
         $router = static::getContainer()->get('router.default');
         
         $entityManager = static::getContainer()->get('doctrine.orm.default_entity_manager');
         $recipes = $entityManager->getRepository(Recettes::class)->findBy([]);
 
-        $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
+        $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('h1', "Liste des Recettes");
     }
+
+    // public function testreadRecipes():void
+    // {
+    //     $client = static::createClient();
+
+    //     $router = static::getContainer()->get('router.default');
+        
+    //     $entityManager = static::getContainer()->get('doctrine.orm.default_entity_manager');
+    //     $recipes = $entityManager->getRepository(Recettes::class)->findBy([]);
+
+    //     $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
+
+    //     $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+    //     $this->assertSelectorTextContains('h1', "Liste des Recettes");
+    // }
 }
