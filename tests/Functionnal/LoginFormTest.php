@@ -30,12 +30,11 @@ class LoginFormTest extends WebTestCase
         //Form
         $form = $crawler->filter("form[name='formLogin']")->form([
             "_username" => "test0@mail.com",
-            "_password" => "test123"
+            "_password" => "test"
         ]);
 
         $client->submit($form);
-
-
+        
         //SIgnifie qu"on doit être rediiriger
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
@@ -51,7 +50,9 @@ class LoginFormTest extends WebTestCase
     {
         $client = static::createClient();
 
-        //On generer un url avec url generatorinterface
+        //$client->request('GET', '/');
+        //La meilleur manière ci-dessous
+        //On genere un url avec url generatorinterface
         $urlGenerator = static::getContainer()->get('router.default');
         
         //On fais une redirection sur l'url de login
