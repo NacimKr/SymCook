@@ -79,5 +79,11 @@ class MainTest extends WebTestCase
         ]);
 
         $client->submit($form);
+
+        //On fait la redirection une la recette ajouter
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+
+        //on va la redirection qu'il nous propose
+        $client->followRedirect();
     }
 }
