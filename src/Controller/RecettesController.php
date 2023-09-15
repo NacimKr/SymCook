@@ -108,6 +108,7 @@ class RecettesController extends AbstractController
             //Quand on ajoute une data on le relie a l'utilisateur courant
             //Et aussi on ajoute un data dans la colonne user_id
             $recettes->setUser($this->getUser());
+            $recettes->setIsPublic(false);
             $em->persist($recettes);
             $em->flush();
             return $this->redirectToRoute("app_recettes");
@@ -140,6 +141,7 @@ class RecettesController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $form->getData();
+            // dd($form->getData());
             $em->persist($recettes);
             $em->flush();
             return $this->redirectToRoute("app_recettes");

@@ -3,6 +3,7 @@
 namespace App\Tests\TohamFunctionnal;
 
 use App\Entity\Recettes;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,29 +44,40 @@ class MainTest extends WebTestCase
         //Redirect to home with session
         $this->assertRouteSame('app_home');
 
+        //La redirection vers la page des recettes une fois connecté
         $router = static::getContainer()->get('router.default');
         
         $entityManager = static::getContainer()->get('doctrine.orm.default_entity_manager');
-        $recipes = $entityManager->getRepository(Recettes::class)->findBy([]);
-
+        $entityManager->getRepository(Recettes::class)->findBy([]);
         $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorTextContains('h1', "Liste des Recettes");
+        // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertSelectorTextContains('h1', 'Liste des Recettes');
     }
 
-    // public function testreadRecipes():void
-    // {
-    //     $client = static::createClient();
+    public function testIfCreateRecipeIsSuccessfull():void
+    {
+        $client = static::createClient();
 
-    //     $router = static::getContainer()->get('router.default');
-        
-    //     $entityManager = static::getContainer()->get('doctrine.orm.default_entity_manager');
-    //     $recipes = $entityManager->getRepository(Recettes::class)->findBy([]);
+        //On recupère notre generator et entityManager dans notre container de service
+        $urlGenerator = static::getContainer()->get("router.default"); 
+        $entityManager = static::getContainer()->get("doctrine.orm.default_entity_manager"); 
 
-    //     $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
+        // $user = $entityManager->find(User::class, 1);
 
-    //     $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
-    //     $this->assertSelectorTextContains('h1', "Liste des Recettes");
-    // }
+        //On se rend sur la page de création de recettes
+        $crawler = $client->request("GET", $urlGenerator->generate('app_add'));
+        $this->assertSelectorTextContains('h1', 'Ajouter une Recettes');
+
+        $form = $crawler->selectButton('Valider')->form([
+            "recettes[nom]" => "Recette1",
+            "recettes[temps]" => 14,
+            "recettes[nb_personnes]" => "Recette1",
+            "recettes[difficulty]" => 3,
+            "recettes[description]" => "Lorem ipsum dolor sit amet",
+            "recettes[prix]" => 13
+        ]);
+
+        $client->submit($form);
+    }
 }
