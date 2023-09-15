@@ -66,7 +66,7 @@ class MainTest extends WebTestCase
         // $user = $entityManager->find(User::class, 1);
 
         //On se rend sur la page de création de recettes
-        $crawler = $client->request("GET", $urlGenerator->generate('app_add'));
+        $crawler = $client->request(Request::METHOD_GET, $urlGenerator->generate('app_add'));
         $this->assertSelectorTextContains('h1', 'Ajouter une Recettes');
 
         $form = $crawler->selectButton('Valider')->form([
