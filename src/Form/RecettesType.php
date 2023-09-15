@@ -43,12 +43,12 @@ class RecettesType extends AbstractType
             ->add('prix',IntegerType::class)
             ->add("list_ingredients", EntityType::class, [
                 'class' => Ingredients::class,
-                // 'query_builder' => function(IngredientsRepository $ir){
-                //     return $ir->createQueryBuilder('i')
-                //     ->where('i.user_id = :user')
-                //     ->setParameter('user', $this->token->getToken()->getUser())
-                //     ->orderBy('i.nom', 'ASC');
-                // },
+                'query_builder' => function(IngredientsRepository $ir){
+                    return $ir->createQueryBuilder('i')
+                    ->where('i.user = :user')
+                    ->setParameter('user', $this->token->getToken()->getUser())
+                    ->orderBy('i.nom', 'ASC');
+                },
                 "choice_label" => "nom",
                 'multiple' => true,
                 'expanded' => true,

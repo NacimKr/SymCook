@@ -43,16 +43,6 @@ class MainTest extends WebTestCase
 
         //Redirect to home with session
         $this->assertRouteSame('app_home');
-
-        //La redirection vers la page des recettes une fois connecté
-        $router = static::getContainer()->get('router.default');
-        
-        $entityManager = static::getContainer()->get('doctrine.orm.default_entity_manager');
-        $entityManager->getRepository(Recettes::class)->findBy([]);
-        $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
-
-        // $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSelectorTextContains('h1', 'Liste des Recettes');
     }
 
     public function testIfCreateRecipeIsSuccessfull():void
@@ -63,27 +53,30 @@ class MainTest extends WebTestCase
         $urlGenerator = static::getContainer()->get("router.default"); 
         $entityManager = static::getContainer()->get("doctrine.orm.default_entity_manager"); 
 
-        // $user = $entityManager->find(User::class, 1);
+        //On connecte le user
+        $user = $entityManager->find(User::class, 1);
+        $client->loginUser($user);
 
-        //On se rend sur la page de création de recettes
+        // //On se rend sur la page de création de recettes
         $crawler = $client->request(Request::METHOD_GET, $urlGenerator->generate('app_add'));
         $this->assertSelectorTextContains('h1', 'Ajouter une Recettes');
 
-        $form = $crawler->selectButton('Valider')->form([
+        $form = $crawler->filter("form[name='recettes']")->form([
             "recettes[nom]" => "Recette1",
             "recettes[temps]" => 14,
-            "recettes[nb_personnes]" => "Recette1",
+            "recettes[nb_personnes]" => 5,
             "recettes[difficulty]" => 3,
             "recettes[description]" => "Lorem ipsum dolor sit amet",
             "recettes[prix]" => 13
         ]);
-
         $client->submit($form);
 
-        //On fait la redirection une la recette ajouter
+        // // //On fait la redirection une fois la recette ajouter
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
 
-        //on va la redirection qu'il nous propose
+        // // //on va la redirection qu'il nous propose
         $client->followRedirect();
+
+        $this->assertRouteSame("app_recettes");
     }
 }

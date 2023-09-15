@@ -7,7 +7,7 @@
          colors="true"
          bootstrap="tests/bootstrap.php"
          convertDeprecationsToExceptions="false"
-         testdox="true"
+         testdox="false"
     >
     <php>
         <ini name="display_errors" value="1" />
