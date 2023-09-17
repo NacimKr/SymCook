@@ -45,6 +45,7 @@ class MainTest extends WebTestCase
         $this->assertRouteSame('app_home');
     }
 
+    
     public function testIfCreateRecipeIsSuccessfull():void
     {
         $client = static::createClient();
@@ -78,5 +79,23 @@ class MainTest extends WebTestCase
         $client->followRedirect();
 
         $this->assertRouteSame("app_recettes");
+    }
+
+
+    public function testReadRecipes():void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+
+        $entityManager = $container->get("doctrine.orm.default_entity_manager");
+        $router = $container->get("router.default");
+        $client->request(Request::METHOD_GET, $router->generate("app_recettes"));
+
+        $user = $entityManager->find(User::class, 1);
+
+        $client->loginUser($user);
+
+        $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
+        $this->assertSelectorTextContains('h1', "Liste des Recettes");
     }
 }
