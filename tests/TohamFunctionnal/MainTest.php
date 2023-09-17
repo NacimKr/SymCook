@@ -24,6 +24,8 @@ class MainTest extends WebTestCase
         // $this->assertSelectorTextContains('h2', 'Bienvenue sur SymRecipe');
     }
 
+
+
     public function testconnectRecipes()
     {
         $client = static::createClient();
@@ -46,6 +48,8 @@ class MainTest extends WebTestCase
     }
 
     
+
+
     public function testIfCreateRecipeIsSuccessfull():void
     {
         $client = static::createClient();
@@ -82,6 +86,7 @@ class MainTest extends WebTestCase
     }
 
 
+
     public function testReadRecipes():void
     {
         $client = static::createClient();
@@ -96,6 +101,59 @@ class MainTest extends WebTestCase
         $client->loginUser($user);
 
         $crawler = $client->request(Request::METHOD_GET, $router->generate('app_recettes'));
+        
+        //On arrive bien dans notre redirection avec succès
+        $this->assertResponseIsSuccessful();
+
+        //On check si y'a bien le titre qu'on souhaite avoir
         $this->assertSelectorTextContains('h1', "Liste des Recettes");
+
+        //On check si c'est bien notre route
+        $this->assertRouteSame("app_recettes");
+    }
+
+
+
+    public function testUpdateRecipes():void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+
+        $router = $container->get('router.default');
+        $entityManager = $container->get('doctrine.orm.default_entity_manager');
+
+        //On recupère un utilisateur
+        //On change on passe avec ne tableau de critéres et 
+        //dans ce cas faudra utiliser la methode getRepository()
+        $user = $entityManager->find(User::class, 1);
+
+        //On checke que la recette est bien celle du user
+        $recipes = $entityManager
+            ->getRepository(Recettes::class)
+            ->findOneBy([
+                'user' => $user
+            ]);
+
+        //On loggue l'utilisateur
+        $client->loginUser($user);
+
+        //On se redirigie vers la page voulu (la page de modification des recettes)
+        $crawler = $client->request(
+            Request::METHOD_GET, 
+            $router->generate('modify_recipe', ['id'=>1])
+        );
+
+        $form = $crawler->filter("form[name='recettes']")->form([
+            "recettes[nom]" => "Recette1",
+            "recettes[temps]" => 14,
+            "recettes[nb_personnes]" => 5,
+            "recettes[difficulty]" => 3,
+            "recettes[description]" => "Lorem ipsum dolor sit amet",
+            "recettes[prix]" => 13
+        ]);
+
+        $client->submit($form);
+        
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
     }
 }
