@@ -144,7 +144,7 @@ class MainTest extends WebTestCase
         );
 
         $form = $crawler->filter("form[name='recettes']")->form([
-            "recettes[nom]" => "Recette1",
+            "recettes[nom]" => "Recette",
             "recettes[temps]" => 14,
             "recettes[nb_personnes]" => 5,
             "recettes[difficulty]" => 3,
@@ -154,6 +154,45 @@ class MainTest extends WebTestCase
 
         $client->submit($form);
         
+        $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
+    }
+
+
+    /**
+     * pOUR CE QUE CE TEST FONCTIONNE J4AI DU MODIFIER LES CONSTRAINT AVEC LES NOTES CAR SINON ON SUPPRIME
+     * LA RECETTE MAIS LES NOTES NON DU COUP ON A UNE 
+     * ERROR CONSTRAINT KEY etc.
+     */
+
+    public function testDeleteRecipes():void
+    {
+        $client = static::createClient();
+        $container = static::getContainer();
+
+        $router = $container->get('router.default');
+        $entityManager = $container->get('doctrine.orm.default_entity_manager');
+
+        //On recupère un utilisateur
+        //On change on passe avec ne tableau de critéres et 
+        //dans ce cas faudra utiliser la methode getRepository()
+        $user = $entityManager->find(User::class, 1);
+
+        //On checke que la recette est bien celle du user
+        $recipes = $entityManager
+            ->getRepository(Recettes::class)
+            ->findOneBy([
+                'user' => $user
+            ]);
+
+        //On loggue l'utilisateur
+        $client->loginUser($user);
+
+        //On se redirigie vers la page voulu (la page de modification des recettes)
+        $client->request(
+            Request::METHOD_GET, 
+            $router->generate('delete_app', ['id' => 1])
+        );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_FOUND);
     }
 }
